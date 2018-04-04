@@ -1,0 +1,6 @@
+name: Diskord
+author: LimeGlass
+description: A Skript addon for full Discord4J support.
+version: 1.0.0
+main: me.limeglass.diskord.Diskord
+depend: [Skript]
