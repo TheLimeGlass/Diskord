@@ -2,12 +2,16 @@ package me.limeglass.diskord.lang;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.bukkit.event.Event;
+
 import java.lang.reflect.ParameterizedType;
 
-import ch.njol.skript.classes.Changer;
+import ch.njol.skript.ScriptLoader;
+import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
@@ -19,17 +23,19 @@ import me.limeglass.diskord.utils.Utils;
 import me.limeglass.diskord.utils.annotations.AllChangers;
 import me.limeglass.diskord.utils.annotations.Changers;
 import me.limeglass.diskord.utils.annotations.DetermineSingle;
+import me.limeglass.diskord.utils.annotations.Events;
 import me.limeglass.diskord.utils.annotations.Multiple;
 import me.limeglass.diskord.utils.annotations.Settable;
 import me.limeglass.diskord.utils.annotations.Single;
 
 public abstract class DiskordExpression<T> extends SimpleExpression<T> implements DataChecker {
 
-	private Class<T> expressionClass;
-	protected ExpressionData expressions;
-	protected int patternMark;
-	protected ParseResult parser;
 	private List<Object> values = new ArrayList<Object>();
+	protected Set<T> collection = new HashSet<T>();
+	protected ExpressionData expressions;
+	private Class<T> expressionClass;
+	protected ParseResult parser;
+	protected int patternMark;
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -56,6 +62,12 @@ public abstract class DiskordExpression<T> extends SimpleExpression<T> implement
 
 	@Override
 	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parser) {
+		if (getClass().isAnnotationPresent(Events.class)) {
+			if (!contains()) {
+				Diskord.debugMessage("The expression `" + getClass().getSimpleName() + "` can't be used in the event: " + ScriptLoader.getCurrentEventName() + "it can only be used in: " + Arrays.toString(getClass().getAnnotation(Events.class).value()));
+				return false;
+			}
+		}
 		if (expressions != null && getSyntax() != null) this.expressions = new ExpressionData(expressions, getSyntax()[0]);
 		this.patternMark = parser.mark;
 		this.parser = parser;
@@ -71,7 +83,7 @@ public abstract class DiskordExpression<T> extends SimpleExpression<T> implement
 	}
 	
 	@Override
-	public Class<?>[] acceptChange(final Changer.ChangeMode mode) {
+	public Class<?>[] acceptChange(final ChangeMode mode) {
 		Class<?>[] returnable = (getClass().isAnnotationPresent(Multiple.class)) ? CollectionUtils.array(Utils.getArrayClass(expressionClass)) : CollectionUtils.array(expressionClass);
 		if (getClass().isAnnotationPresent(Settable.class)) returnable = getClass().getAnnotation(Settable.class).value();
 		if (getClass().isAnnotationPresent(AllChangers.class)) return returnable;
@@ -79,7 +91,7 @@ public abstract class DiskordExpression<T> extends SimpleExpression<T> implement
 		return (Arrays.asList(getClass().getAnnotation(Changers.class).value()).contains(mode)) ? returnable : null;
 	}
 	
-	public <V> Boolean isNull(Event event, Class<?>... types) {
+	public Boolean isNull(Event event, @SuppressWarnings("unchecked") Class<T>... types) {
 		return isNull(event, expressions, types);
 	}
 	
@@ -90,4 +102,14 @@ public abstract class DiskordExpression<T> extends SimpleExpression<T> implement
 	public Boolean areNull(Event event) {
 		return areNull(event, expressions);
 	}
+	
+	private Boolean contains() {
+		for (Class<? extends Event> event : getClass().getAnnotation(Events.class).value()) {
+			if (Arrays.asList(ScriptLoader.getCurrentEvents()).contains(event)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 }

@@ -37,10 +37,11 @@ public abstract class DiskordEffect extends Effect implements DataChecker {
 			Arrays.asList(expressions.getExpressions()).stream().forEach(expression->values.add(expression.toString(event, debug)));
 			Diskord.debugMessage(getClass().getSimpleName() + " - " + modSyntax + " (" + event.getEventName() + ")" + " Data: " + Arrays.toString(values.toArray()));
 		}
-		return Diskord.getNameplate() + getClass().getSimpleName() + "- Syntax: " + getSyntax();
+		return Diskord.getNameplate() + getClass().getSimpleName() + "- Syntax: " + Arrays.toString(getSyntax());
 	}
 	
-	public <V> Boolean isNull(Event event, Class<?>... types) {
+	@SafeVarargs
+	public final <T> Boolean isNull(Event event, Class<T>... types) {
 		return isNull(event, expressions, types);
 	}
 
@@ -51,4 +52,5 @@ public abstract class DiskordEffect extends Effect implements DataChecker {
 	public Boolean areNull(Event event) {
 		return areNull(event, expressions);
 	}
+
 }

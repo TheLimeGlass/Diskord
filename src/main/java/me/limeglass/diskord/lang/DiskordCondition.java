@@ -38,10 +38,10 @@ public abstract class DiskordCondition extends Condition implements DataChecker 
 			Arrays.asList(expressions.getExpressions()).stream().forEach(expression->values.add(expression.toString(event, debug)));
 			Diskord.debugMessage(getClass().getSimpleName() + " - " + modSyntax + " (" + event.getEventName() + ")" + " Data: " + Arrays.toString(values.toArray()));
 		}
-		return Diskord.getNameplate() + getClass().getSimpleName() + "- Syntax: " + getSyntax();
+		return Diskord.getNameplate() + getClass().getSimpleName() + "- Syntax: " + Arrays.toString(getSyntax());
 	}
 
-	public <V> Boolean isNull(Event event, Class<?>... types) {
+	public <T> Boolean isNull(Event event, @SuppressWarnings("unchecked") Class<T>... types) {
 		return isNull(event, expressions, types);
 	}
 	
@@ -52,4 +52,5 @@ public abstract class DiskordCondition extends Condition implements DataChecker 
 	public Boolean areNull(Event event) {
 		return areNull(event, expressions);
 	}
+
 }

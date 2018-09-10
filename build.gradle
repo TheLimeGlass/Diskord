@@ -1,5 +1,10 @@
-
 apply plugin: 'java-library'
+apply plugin: 'eclipse'
+
+configurations {
+    shade
+    compile.extendsFrom shade
+}
 
 repositories {
     mavenCentral()
@@ -13,12 +18,16 @@ repositories {
     maven {
         url  "https://jitpack.io"
     }
+    //Bungeecord
+    maven {
+        url "https://oss.sonatype.org/content/repositories/snapshots"
+    }
 }
 
 dependencies {
     
     // Discord4J
-    compile "com.github.austinv11:Discord4J:2.9.3"
+    shade "com.github.austinv11:Discord4J:2.9.3"
     //compile (group: 'com.github.austinv11', name: 'Discord4J', version: '2.9.3')
     
     //Skript
@@ -31,4 +40,19 @@ dependencies {
 	
 	//Spigot/Bukkit
 	compile (group: 'org.spigotmc', name: 'spigot-api', version: '1.12.2-R0.1-SNAPSHOT')
+}
+
+processResources {
+    from(sourceSets.main.resources.srcDirs) {
+        include '**/*.yml'
+    }
+}
+
+jar {
+    configurations.shade.each { dep ->
+        from(project.zipTree(dep)){
+            exclude 'META-INF', 'META-INF/**'
+            exclude '**/*.yml'
+        }
+    }
 }

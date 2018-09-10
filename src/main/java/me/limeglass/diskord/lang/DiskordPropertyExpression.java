@@ -3,7 +3,9 @@ package me.limeglass.diskord.lang;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.bukkit.event.Event;
 
@@ -24,9 +26,10 @@ import me.limeglass.diskord.utils.annotations.Settable;
 
 public abstract class DiskordPropertyExpression<F, T> extends PropertyExpression<F, T> {
 
+	private List<Object> values = new ArrayList<Object>();
+	protected Set<T> collection = new HashSet<T>();
 	protected ExpressionData expressions;
 	protected Class<T> expressionClass;
-	private List<Object> values = new ArrayList<Object>();
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -54,9 +57,8 @@ public abstract class DiskordPropertyExpression<F, T> extends PropertyExpression
 	@Override
 	public String toString(Event event, boolean debug) {
 		String modSyntax = Syntax.isModified(getClass()) ? "Modified syntax: " + Arrays.toString(getSyntax()) : Arrays.toString(getSyntax());
-		if (expressions != null && event != null) for (Expression<?> expression : expressions.getExpressions()) values.add(expression.getSingle(event));
 		if (event != null) Diskord.debugMessage(getClass().getSimpleName() + " - " + modSyntax + " (" + event.getEventName() + ")" + " Data: " + Arrays.toString(values.toArray()));
-		return Diskord.getNameplate() + getClass().getSimpleName() + ": the " + getPropertyName() + " of " + getExpr().toString(event, debug);
+		return Diskord.getNameplate() + getClass().getSimpleName() + ": the " + getPropertyName() + " (of|from) " + getExpr().toString(event, debug);
 	}
 	
 	@Override
@@ -79,4 +81,5 @@ public abstract class DiskordPropertyExpression<F, T> extends PropertyExpression
 		}
 		return false;
 	}
+
 }

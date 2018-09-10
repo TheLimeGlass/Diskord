@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.bukkit.event.Event;
@@ -13,19 +14,21 @@ import ch.njol.skript.lang.Expression;
 
 public class ExpressionData {
 
-	private final Expression<?>[] expressions;
+	private Expression<?>[] expressions;
 	private Map<String, Integer> syntax = new HashMap<String, Integer>();
-	private boolean nullable = false;
+	public boolean nullable;
+	private final String pattern;
 	
 	/**
 	 * Register an Expression for the abstract calling class
 	 * Useless on its own
 	*/
 	public ExpressionData(Expression<?>[] expressions, String pattern) {
+		this.pattern = pattern;
 		Matcher matcher = Pattern.compile("\\%([^\\%]+)\\%").matcher(pattern);
 		int i = 0;
 		while (matcher.find()) {
-			String expression = matcher.group(1);
+			String expression = matcher.group(1).trim();
 			while ((expression.startsWith("-")) || (expression.startsWith("~")) || (expression.startsWith("*"))) {
 				if (expression.startsWith("-")) nullable = true;
 				expression = expression.substring(1, expression.length());
@@ -36,10 +39,9 @@ public class ExpressionData {
 			if (syntax.containsKey(expression)) {
 				while (syntax.containsKey(expression)) {
 					char lastChar = expression.charAt(expression.length() - 1);
-					int index = Character.getNumericValue(lastChar);
-					if (index >= 0 && index <= 9) {
-						expression = expression.replaceAll("\\d+.*", "");
-						expression = expression + (index + 1);
+					if (lastChar >= '0' && lastChar <= '9') {
+						expression = expression.replace(lastChar + "", "");
+						expression = expression + (Integer.valueOf(lastChar + "") + 1);
 					}
 				}
 			}
@@ -48,9 +50,10 @@ public class ExpressionData {
 		}
 		this.expressions = expressions;
 	}
-	
-	public ExpressionData(Expression<?>[] expressions) {
-		this.expressions = expressions;
+
+	public ExpressionData(ExpressionData clone) {
+		this.pattern = clone.getPattern();
+		new ExpressionData(clone.getExpressions(), pattern);
 	}
 	
 	/**
@@ -93,7 +96,7 @@ public class ExpressionData {
 	*/
 	@Nullable
 	public Expression<?> get(int index) {
-		if (expressions[index] == null) return null;
+		if (index > expressions.length) return null;
 		return expressions[index];
 	}
 	
@@ -126,7 +129,10 @@ public class ExpressionData {
 	*/
 	@Nullable
 	public <T> Expression<?> getExpression(Class<T> type, int index) {
-		return expressions[syntax.get(type.getSimpleName().toLowerCase() + index)];
+		String key = type.getSimpleName().toLowerCase() + index;
+		if (!syntax.containsKey(key)) return null;
+		int i = syntax.get(type.getSimpleName().toLowerCase() + index);
+		return expressions[i];
 	}
 	
 	/**
@@ -148,7 +154,7 @@ public class ExpressionData {
 	*/
 	@Nullable
 	public Object getAllOfFirst(Event event) {
-		return (expressions != null && expressions.length > 0) ? expressions[0].getAll(event) : null;
+		return (expressions != null && expressions.length > 0) ? expressions[0].getArray(event) : null;
 	}
 
 	/**
@@ -238,7 +244,7 @@ public class ExpressionData {
 	@SuppressWarnings("unchecked")
 	@Nullable
 	public <T> T[] getAll(Event event, Class<T> type, int index) {
-		return (syntax.containsKey(type.getSimpleName().toLowerCase() + index)) ? (T[]) getExpression(type, index).getAll(event) : null;
+		return (syntax.containsKey(type.getSimpleName().toLowerCase() + index)) ? (T[]) getExpression(type, index).getArray(event) : null;
 	}
 	
 	/**
@@ -251,7 +257,7 @@ public class ExpressionData {
 	@SuppressWarnings("unchecked")
 	@Nullable
 	public <T> T[] getAll(Event event, Class<T> type) {
-		return (syntax.containsKey(type.getSimpleName().toLowerCase() + 0)) ? (T[]) getExpression(type, 0).getAll(event) : null;
+		return (syntax.containsKey(type.getSimpleName().toLowerCase() + 0)) ? (T[]) getExpression(type, 0).getArray(event) : null;
 	}
 	
 	/**
@@ -263,7 +269,7 @@ public class ExpressionData {
 	*/
 	@Nullable
 	public <T> int getSize(Event event, Class<T> type, int index) {
-		return (syntax.containsKey(type.getSimpleName().toLowerCase() + index)) ? getExpression(type, index).getAll(event).length : null;
+		return (syntax.containsKey(type.getSimpleName().toLowerCase() + index)) ? getExpression(type, index).getArray(event).length : null;
 	}
 	
 	/**
@@ -274,7 +280,7 @@ public class ExpressionData {
 	*/
 	@Nullable
 	public <T> int getSize(Event event, Class<T> type) {
-		return (syntax.containsKey(type.getSimpleName().toLowerCase() + 0)) ? getExpression(type, 0).getAll(event).length : null;
+		return (syntax.containsKey(type.getSimpleName().toLowerCase() + 0)) ? getExpression(type, 0).getArray(event).length : null;
 	}
 	
 	/**
@@ -299,7 +305,7 @@ public class ExpressionData {
 	@Nullable
 	public <T> Map<Expression<?>, Object[]> getAllMap(Event event) {
 		Map<Expression<?>, Object[]> data = new HashMap<Expression<?>, Object[]>();
-		Arrays.asList(expressions).forEach(expression -> data.put(expression, expression.getAll(event)));
+		Arrays.asList(expressions).forEach(expression -> data.put(expression, expression.getArray(event)));
 		return (data.isEmpty()) ? null : data;
 	}
 	
@@ -339,4 +345,21 @@ public class ExpressionData {
 		}
 		return (data.isEmpty()) ? null : data;
 	}
+	
+	public String toString(Event event, boolean debug) {
+		StringBuilder builder = new StringBuilder();
+		builder.append(getClass().getName() + "\n");
+		builder.append("\nEntry set:\n");
+		for (Entry<String, Integer> entry : syntax.entrySet())
+			builder.append(entry.getKey()  + " spot: " + entry.getValue() + "\n");
+		builder.append("\nExpressions:\n");
+		for (Expression<?> expression : expressions)
+			builder.append(expression.toString(event, debug) + "\n");
+		return builder.toString();
+	}
+
+	public String getPattern() {
+		return pattern;
+	}
+
 }
