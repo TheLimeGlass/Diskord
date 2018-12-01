@@ -1,8 +1,5 @@
 package me.limeglass.diskord.elements.expressions.role;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.bukkit.DyeColor;
 import org.bukkit.event.Event;
 
@@ -26,11 +23,10 @@ public class ExprRoleColour extends DiskordPropertyExpression<IRole, Color> {
 	@Override
 	protected Color[] get(Event event, IRole[] roles) {
 		if (isNull(event)) return null;
-		Set<Color> colours = new HashSet<Color>();
 		for (IRole role : roles) {
-			colours.add(Color.byWoolColor(DyeColor.getByColor(org.bukkit.Color.fromRGB(role.getColor().getRGB()))));
+			collection.add(Color.byWoolColor(DyeColor.getByColor(org.bukkit.Color.fromRGB(role.getColor().getRGB()))));
 		}
-		return colours.toArray(new Color[colours.size()]);
+		return collection.toArray(new Color[collection.size()]);
 	}
 	
 	@Override

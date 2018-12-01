@@ -41,7 +41,7 @@ public abstract class DiskordEffect extends Effect implements DataChecker {
 	}
 	
 	@SafeVarargs
-	public final <T> Boolean isNull(Event event, Class<T>... types) {
+	public final Boolean isNull(Event event, Class<?>... types) {
 		return isNull(event, expressions, types);
 	}
 

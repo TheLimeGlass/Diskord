@@ -1,8 +1,5 @@
 package me.limeglass.diskord.elements.expressions.category;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.bukkit.event.Event;
 
 import ch.njol.skript.doc.Description;
@@ -21,12 +18,12 @@ public class ExprCategoryUserPermissions extends DiskordExpression<Permissions> 
 	@Override
 	protected Permissions[] get(Event event) {
 		if (areNull(event)) return null;
-		Set<Permissions> permissions = new HashSet<Permissions>();
+		IUser[] users = expressions.getAll(event, IUser.class);
 		for (ICategory category : expressions.getAll(event, ICategory.class)) {
-			for (IUser user : expressions.getAll(event, IUser.class)) {
-				permissions.addAll(category.getModifiedPermissions(user));
+			for (IUser user : users) {
+				collection.addAll(category.getModifiedPermissions(user));
 			}
 		}
-		return permissions.toArray(new Permissions[permissions.size()]);
+		return collection.toArray(new Permissions[collection.size()]);
 	}
 }

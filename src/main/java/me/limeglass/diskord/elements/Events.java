@@ -18,9 +18,6 @@ import me.limeglass.diskord.utils.ReflectionUtil;
 
 public class Events {
 	
-	public Events() {
-	}
-	
 	public static void registerEvent(@Nullable Class<? extends SkriptEvent> skriptEvent, Class<? extends Event> event, String... patterns) {
 		if (skriptEvent == null) skriptEvent = SimpleEvent.class;
 		for (int i = 0; i < patterns.length; i++) {
@@ -65,4 +62,5 @@ public class Events {
 		}
 		return classes;
 	}
+
 }

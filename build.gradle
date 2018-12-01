@@ -2,57 +2,56 @@ apply plugin: 'java-library'
 apply plugin: 'eclipse'
 
 configurations {
-    shade
-    compile.extendsFrom shade
+	shade
+	compile.extendsFrom shade
 }
 
 repositories {
-    mavenCentral()
-    jcenter()
-    maven {
-        url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
-    }
-    maven {
-        url "https://raw.githubusercontent.com/bensku/mvn-repo/master"
-    }
-    maven {
-        url  "https://jitpack.io"
-    }
-    //Bungeecord
-    maven {
-        url "https://oss.sonatype.org/content/repositories/snapshots"
-    }
+	mavenCentral()
+	jcenter()
+	
+	//Spigot
+	maven {
+		url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
+	}
+	
+	//Bungeecord
+	maven {
+		url "https://oss.sonatype.org/content/repositories/snapshots"
+	}
+	
+	maven {
+		url  "https://jitpack.io"
+	}
 }
 
 dependencies {
-    
-    // Discord4J
-    shade "com.github.austinv11:Discord4J:2.9.3"
-    //compile (group: 'com.github.austinv11', name: 'Discord4J', version: '2.9.3')
-    
-    //Skript
-    compile (group: 'ch.njol', name: 'Skript', version: '2.2-dev26') {
-        transitive = false
-	}
 	
 	//Nullable annotation
-	compile (group: 'org.eclipse.jdt', name: 'org.eclipse.jdt.annotation', version: '1.1.0')
+	implementation (group: 'org.eclipse.jdt', name: 'org.eclipse.jdt.annotation', version: '1.1.0')
+	
+	//Skript
+	implementation (group: 'com.github.SkriptLang', name: 'Skript', version: '2.3-beta4')
 	
 	//Spigot/Bukkit
-	compile (group: 'org.spigotmc', name: 'spigot-api', version: '1.12.2-R0.1-SNAPSHOT')
+	implementation (group: 'org.spigotmc', name: 'spigot-api', version: '1.12.2-R0.1-SNAPSHOT')
+	
+	// Discord4J
+	shade (group: 'com.github.austinv11', name: 'Discord4J', version: '2.10.1')
+	//implementation (group: 'com.github.austinv11', name: 'Discord4J', version: '2.9.3')
 }
 
 processResources {
-    from(sourceSets.main.resources.srcDirs) {
-        include '**/*.yml'
-    }
+	from(sourceSets.main.resources.srcDirs) {
+		include '**/*.yml'
+	}
 }
 
 jar {
-    configurations.shade.each { dep ->
-        from(project.zipTree(dep)){
-            exclude 'META-INF', 'META-INF/**'
-            exclude '**/*.yml'
-        }
-    }
+	configurations.shade.each { dep ->
+		from(project.zipTree(dep)){
+			exclude 'META-INF', 'META-INF/**'
+			exclude '**/*.yml'
+		}
+	}
 }

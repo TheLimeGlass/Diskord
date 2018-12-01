@@ -1,8 +1,5 @@
 package me.limeglass.diskord.elements.expressions.user;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.bukkit.DyeColor;
 import org.bukkit.event.Event;
 
@@ -24,14 +21,14 @@ public class ExprUserColour extends DiskordExpression<Color> {
 	@Override
 	protected Color[] get(Event event) {
 		if (areNull(event)) return null;
-		Set<Color> colours = new HashSet<Color>();
+		IGuild[] guilds = expressions.getAll(event, IGuild.class);
 		for (IUser user : expressions.getAll(event, IUser.class)) {
-			for (IGuild guild : expressions.getAll(event, IGuild.class)) {
+			for (IGuild guild : guilds) {
 				int rgb = user.getColorForGuild(guild).getRGB();
 				org.bukkit.Color color = org.bukkit.Color.fromRGB(rgb);
-				colours.add(Color.byWoolColor(DyeColor.getByColor(color)));
+				collection.add(Color.byWoolColor(DyeColor.getByColor(color)));
 			}
 		}
-		return colours.toArray(new Color[colours.size()]);
+		return collection.toArray(new Color[collection.size()]);
 	}
 }

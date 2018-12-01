@@ -17,15 +17,15 @@ import me.limeglass.diskord.utils.Utils;
 
 public class Diskord extends JavaPlugin {
 	
-	private Metrics metrics;
+	private static String packageName = "me.limeglass.diskord";
+	private static String prefix = "&8[&5Diskord&8] &d";
+	private static String nameplate = "[Diskord] ";
+	public FileConfiguration config = getConfig();
+	private static FileConfiguration syntaxData;
 	private SkriptAddon addonInstance;
 	private static Diskord instance;
-	public FileConfiguration config = getConfig();
 	public static File syntaxFile;
-	private static FileConfiguration syntaxData;
-	private static String packageName = "me.limeglass.diskcord";
-	private static String prefix = "&8[&5Diskcord&8] &d";
-	private static String nameplate = "[Diskcord] ";
+	private Metrics metrics;
 	
 	public void onEnable(){
 		addonInstance = Skript.registerAddon(this).setLanguageFileDirectory("lang");
@@ -90,6 +90,5 @@ public class Diskord extends JavaPlugin {
 	public static void consoleMessage(String... messages) {
 		for (String text : messages) Bukkit.getConsoleSender().sendMessage(Utils.cc(prefix + text));
 	}
+
 }
-/*	TODO Possible module loader if people want that or you feel like adding that.
-*/

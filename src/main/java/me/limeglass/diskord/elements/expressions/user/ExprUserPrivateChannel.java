@@ -1,8 +1,5 @@
 package me.limeglass.diskord.elements.expressions.user;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.bukkit.event.Event;
 
 import ch.njol.skript.doc.Description;
@@ -22,10 +19,9 @@ public class ExprUserPrivateChannel extends DiskordPropertyExpression<IUser, IPr
 	@Override
 	protected IPrivateChannel[] get(Event event, IUser[] users) {
 		if (isNull(event)) return null;
-		Set<IPrivateChannel> channels = new HashSet<IPrivateChannel>();
 		for (IUser user : users) {
-			channels.add(user.getOrCreatePMChannel());
+			collection.add(user.getOrCreatePMChannel());
 		}
-		return channels.toArray(new IPrivateChannel[channels.size()]);
+		return collection.toArray(new IPrivateChannel[collection.size()]);
 	}
 }

@@ -1,8 +1,5 @@
 package me.limeglass.diskord.elements.expressions.category;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.bukkit.event.Event;
 
 import ch.njol.skript.classes.Changer.ChangeMode;
@@ -24,11 +21,10 @@ public class ExprCategoryName extends DiskordPropertyExpression<ICategory, Strin
 	@Override
 	protected String[] get(Event event, ICategory[] categories) {
 		if (isNull(event)) return null;
-		Set<String> names = new HashSet<String>();
 		for (ICategory category : categories) {
-			names.add(category.getName());
+			collection.add(category.getName());
 		}
-		return names.toArray(new String[names.size()]);
+		return collection.toArray(new String[collection.size()]);
 	}
 	
 	@Override

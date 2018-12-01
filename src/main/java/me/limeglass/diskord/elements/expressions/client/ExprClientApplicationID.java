@@ -1,8 +1,5 @@
 package me.limeglass.diskord.elements.expressions.client;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.bukkit.event.Event;
 
 import ch.njol.skript.doc.Description;
@@ -21,10 +18,9 @@ public class ExprClientApplicationID extends DiskordPropertyExpression<IDiscordC
 	@Override
 	protected String[] get(Event event, IDiscordClient[] clients) {
 		if (isNull(event)) return null;
-		Set<String> ids = new HashSet<String>();
 		for (IDiscordClient client : clients) {
-			ids.add(client.getApplicationClientID());
+			collection.add(client.getApplicationClientID());
 		}
-		return ids.toArray(new String[ids.size()]);
+		return collection.toArray(new String[collection.size()]);
 	}
 }

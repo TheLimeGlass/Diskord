@@ -1,8 +1,5 @@
 package me.limeglass.diskord.elements.expressions.role;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.bukkit.event.Event;
 
 import ch.njol.skript.classes.Changer.ChangeMode;
@@ -24,11 +21,10 @@ public class ExprRoleHoisted extends DiskordPropertyExpression<IRole, Boolean> {
 	@Override
 	protected Boolean[] get(Event event, IRole[] roles) {
 		if (isNull(event)) return null;
-		Set<Boolean> hoisted = new HashSet<Boolean>();
 		for (IRole role : roles) {
-			hoisted.add(role.isHoisted());
+			collection.add(role.isHoisted());
 		}
-		return hoisted.toArray(new Boolean[hoisted.size()]);
+		return collection.toArray(new Boolean[collection.size()]);
 	}
 	
 	@Override

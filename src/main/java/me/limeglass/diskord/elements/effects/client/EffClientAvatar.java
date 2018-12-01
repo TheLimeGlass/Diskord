@@ -17,8 +17,9 @@ public class EffClientAvatar extends DiskordEffect {
 	@Override
 	protected void execute(Event event) {
 		if (areNull(event)) return;
+		Image image = expressions.getSingle(event, Image.class);
 		for (IDiscordClient client : expressions.getAll(event, IDiscordClient.class)) {
-			client.changeAvatar(expressions.getSingle(event, Image.class));
+			client.changeAvatar(image);
 		}
 	}
 }

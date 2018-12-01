@@ -16,8 +16,9 @@ public class EffClientUsername extends DiskordEffect {
 	@Override
 	protected void execute(Event event) {
 		if (areNull(event)) return;
+		String username = expressions.getSingle(event, String.class);
 		for (IDiscordClient client : expressions.getAll(event, IDiscordClient.class)) {
-			client.changeUsername(expressions.getSingle(event, String.class));
+			client.changeUsername(username);
 		}
 	}
 }

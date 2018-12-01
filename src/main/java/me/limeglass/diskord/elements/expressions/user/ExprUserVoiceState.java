@@ -1,8 +1,5 @@
 package me.limeglass.diskord.elements.expressions.user;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.bukkit.event.Event;
 
 import ch.njol.skript.doc.Description;
@@ -25,12 +22,12 @@ public class ExprUserVoiceState extends DiskordExpression<IVoiceState> {
 	@Override
 	protected IVoiceState[] get(Event event) {
 		if (areNull(event)) return null;
-		Set<IVoiceState> voiceStates = new HashSet<IVoiceState>();
+		IGuild[] guilds = expressions.getAll(event, IGuild.class);
 		for (IUser user : expressions.getAll(event, IUser.class)) {
-			for (IGuild guild : expressions.getAll(event, IGuild.class)) {
-				voiceStates.add(user.getVoiceStateForGuild(guild));
+			for (IGuild guild : guilds) {
+				collection.add(user.getVoiceStateForGuild(guild));
 			}
 		}
-		return voiceStates.toArray(new IVoiceState[voiceStates.size()]);
+		return collection.toArray(new IVoiceState[collection.size()]);
 	}
 }

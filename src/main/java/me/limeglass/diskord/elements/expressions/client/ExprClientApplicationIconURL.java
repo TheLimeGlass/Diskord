@@ -1,8 +1,5 @@
 package me.limeglass.diskord.elements.expressions.client;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.bukkit.event.Event;
 
 import ch.njol.skript.doc.Description;
@@ -21,10 +18,9 @@ public class ExprClientApplicationIconURL extends DiskordPropertyExpression<IDis
 	@Override
 	protected String[] get(Event event, IDiscordClient[] clients) {
 		if (isNull(event)) return null;
-		Set<String> icon = new HashSet<String>();
 		for (IDiscordClient client : clients) {
-			icon.add(client.getApplicationIconURL());
+			collection.add(client.getApplicationIconURL());
 		}
-		return icon.toArray(new String[icon.size()]);
+		return collection.toArray(new String[collection.size()]);
 	}
 }

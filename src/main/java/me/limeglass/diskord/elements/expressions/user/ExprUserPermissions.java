@@ -1,8 +1,5 @@
 package me.limeglass.diskord.elements.expressions.user;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.bukkit.event.Event;
 
 import ch.njol.skript.doc.Description;
@@ -26,12 +23,12 @@ public class ExprUserPermissions extends DiskordExpression<Permissions> {
 	@Override
 	protected Permissions[] get(Event event) {
 		if (areNull(event)) return null;
-		Set<Permissions> permissions = new HashSet<Permissions>();
+		IGuild[] guilds = expressions.getAll(event, IGuild.class);
 		for (IUser user : expressions.getAll(event, IUser.class)) {
-			for (IGuild guild : expressions.getAll(event, IGuild.class)) {
-				permissions.addAll(user.getPermissionsForGuild(guild));
+			for (IGuild guild : guilds) {
+				collection.addAll(user.getPermissionsForGuild(guild));
 			}
 		}
-		return permissions.toArray(new Permissions[permissions.size()]);
+		return collection.toArray(new Permissions[collection.size()]);
 	}
 }

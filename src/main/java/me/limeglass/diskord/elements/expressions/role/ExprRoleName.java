@@ -1,8 +1,5 @@
 package me.limeglass.diskord.elements.expressions.role;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.bukkit.event.Event;
 
 import ch.njol.skript.classes.Changer.ChangeMode;
@@ -24,11 +21,10 @@ public class ExprRoleName extends DiskordPropertyExpression<IRole, String> {
 	@Override
 	protected String[] get(Event event, IRole[] roles) {
 		if (isNull(event)) return null;
-		Set<String> names = new HashSet<String>();
 		for (IRole role : roles) {
-			names.add(role.getName());
+			collection.add(role.getName());
 		}
-		return names.toArray(new String[names.size()]);
+		return collection.toArray(new String[collection.size()]);
 	}
 	
 	@Override

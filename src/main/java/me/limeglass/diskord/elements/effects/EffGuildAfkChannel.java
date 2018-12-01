@@ -17,8 +17,9 @@ public class EffGuildAfkChannel extends DiskordEffect {
 	@Override
 	protected void execute(Event event) {
 		if (areNull(event)) return;
+		IVoiceChannel[] channels = expressions.getAll(event, IVoiceChannel.class);
 		for (IGuild guild : expressions.getAll(event, IGuild.class)) {
-			for (IVoiceChannel channel : expressions.getAll(event, IVoiceChannel.class)) {
+			for (IVoiceChannel channel : channels) {
 				guild.changeAFKChannel(channel);
 			}
 		}

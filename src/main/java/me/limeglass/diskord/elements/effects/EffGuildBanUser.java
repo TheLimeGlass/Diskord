@@ -16,18 +16,23 @@ public class EffGuildBanUser extends DiskordEffect {
 
 	@Override
 	protected void execute(Event event) {
-		if (isNull(event, IUser.class) || isNull(event, IGuild.class)) return;
+		if (isNull(event, IUser.class, IGuild.class)) return;
+		String reason = expressions.getSingle(event, String.class);
+		IUser[] users = expressions.getAll(event, IUser.class);
+		boolean delete = isNull(event, Number.class);
+		boolean message = isNull(event, String.class);
+		int days = expressions.getInt(event);
 		for (IGuild guild : expressions.getAll(event, IGuild.class)) {
-			user: for (IUser user : expressions.getAll(event, IUser.class)) {
-				if (!isNull(event, String.class)) {
-					if (!isNull(event, Number.class)) {
-						guild.banUser(user, expressions.getSingle(event, String.class), expressions.getInt(event));
+			user: for (IUser user : users) {
+				if (!message) {
+					if (!delete) {
+						guild.banUser(user, reason, days);
 						continue user;
 					}
-					guild.banUser(user, expressions.getSingle(event, String.class));
+					guild.banUser(user, reason);
 					continue user;
-				} else if (!isNull(event, Number.class)) {
-					guild.banUser(user, expressions.getInt(event));
+				} else if (!delete) {
+					guild.banUser(user, days);
 					continue user;
 				}
 				guild.banUser(user);

@@ -1,8 +1,5 @@
 package me.limeglass.diskord.elements.expressions.client;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.bukkit.event.Event;
 
 import ch.njol.skript.doc.Description;
@@ -24,10 +21,9 @@ public class ExprClientRegions extends DiskordPropertyExpression<IDiscordClient,
 	@Override
 	protected IRegion[] get(Event event, IDiscordClient[] clients) {
 		if (isNull(event)) return null;
-		Set<IRegion> regions = new HashSet<IRegion>();
 		for (IDiscordClient client : clients) {
-			regions.addAll(client.getRegions());
+			collection.addAll(client.getRegions());
 		}
-		return regions.toArray(new IRegion[regions.size()]);
+		return collection.toArray(new IRegion[collection.size()]);
 	}
 }

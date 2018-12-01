@@ -1,8 +1,5 @@
 package me.limeglass.diskord.elements.expressions.user;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.bukkit.event.Event;
 
 import ch.njol.skript.classes.Changer.ChangeMode;
@@ -26,13 +23,13 @@ public class ExprUserRoles extends DiskordExpression<IRole> {
 	@Override
 	protected IRole[] get(Event event) {
 		if (areNull(event)) return null;
-		Set<IRole> roles = new HashSet<IRole>();
+		IGuild[] guilds = expressions.getAll(event, IGuild.class);
 		for (IUser user : expressions.getAll(event, IUser.class)) {
-			for (IGuild guild : expressions.getAll(event, IGuild.class)) {
-				roles.addAll(user.getRolesForGuild(guild));
+			for (IGuild guild : guilds) {
+				collection.addAll(user.getRolesForGuild(guild));
 			}
 		}
-		return roles.toArray(new IRole[roles.size()]);
+		return collection.toArray(new IRole[collection.size()]);
 	}
 	
 	@Override

@@ -1,8 +1,5 @@
 package me.limeglass.diskord.elements.expressions.client;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.bukkit.event.Event;
 
 import ch.njol.skript.doc.Description;
@@ -24,10 +21,9 @@ public class ExprClientRoles extends DiskordPropertyExpression<IDiscordClient, I
 	@Override
 	protected IRole[] get(Event event, IDiscordClient[] clients) {
 		if (isNull(event)) return null;
-		Set<IRole> roles = new HashSet<IRole>();
 		for (IDiscordClient client : clients) {
-			roles.addAll(client.getRoles());
+			collection.addAll(client.getRoles());
 		}
-		return roles.toArray(new IRole[roles.size()]);
+		return collection.toArray(new IRole[collection.size()]);
 	}
 }

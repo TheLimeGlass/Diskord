@@ -17,8 +17,9 @@ public class EffGuildAfkTimeout extends DiskordEffect {
 	@Override
 	protected void execute(Event event) {
 		if (areNull(event)) return;
+		int time = (int) expressions.getSingle(event, Timespan.class).getMilliSeconds();
 		for (IGuild guild : expressions.getAll(event, IGuild.class)) {
-			guild.changeAFKTimeout((int) expressions.getSingle(event, Timespan.class).getMilliSeconds());
+			guild.changeAFKTimeout(time);
 		}
 	}
 }

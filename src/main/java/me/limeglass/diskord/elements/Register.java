@@ -128,4 +128,5 @@ public class Register {
 		});
 		Diskord.debugMessage("Metrics registered!");
 	}
+
 }

@@ -1,8 +1,5 @@
 package me.limeglass.diskord.elements.expressions.category;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.bukkit.event.Event;
 
 import ch.njol.skript.doc.Description;
@@ -22,10 +19,9 @@ public class ExprCategoryVoiceChannels extends DiskordPropertyExpression<ICatego
 	@Override
 	protected IVoiceChannel[] get(Event event, ICategory[] categories) {
 		if (isNull(event)) return null;
-		Set<IVoiceChannel> channels = new HashSet<IVoiceChannel>();
 		for (ICategory category : categories) {
-			channels.addAll(category.getVoiceChannels());
+			collection.addAll(category.getVoiceChannels());
 		}
-		return channels.toArray(new IVoiceChannel[channels.size()]);
+		return collection.toArray(new IVoiceChannel[collection.size()]);
 	}
 }

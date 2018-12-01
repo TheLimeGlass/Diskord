@@ -1,8 +1,5 @@
 package me.limeglass.diskord.elements.expressions.client;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.bukkit.event.Event;
 
 import ch.njol.skript.doc.Description;
@@ -24,12 +21,12 @@ public class ExprClientInviteCode extends DiskordExpression<IInvite> {
 	@Override
 	protected IInvite[] get(Event event) {
 		if (areNull(event)) return null;
-		Set<IInvite> invites = new HashSet<IInvite>();
+		String[] codes = expressions.getAll(event, String.class);
 		for (IDiscordClient client : expressions.getAll(event, IDiscordClient.class)) {
-			for (String code : expressions.getAll(event, String.class)) {
-				invites.add(client.getInviteForCode(code));
+			for (String code : codes) {
+				collection.add(client.getInviteForCode(code));
 			}
 		}
-		return invites.toArray(new IInvite[invites.size()]);
+		return collection.toArray(new IInvite[collection.size()]);
 	}
 }

@@ -1,8 +1,5 @@
 package me.limeglass.diskord.elements.expressions.category;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.bukkit.event.Event;
 
 import ch.njol.skript.classes.Changer.ChangeMode;
@@ -24,11 +21,10 @@ public class ExprCategoryPosition extends DiskordPropertyExpression<ICategory, N
 	@Override
 	protected Number[] get(Event event, ICategory[] categories) {
 		if (isNull(event)) return null;
-		Set<Number> positions = new HashSet<Number>();
 		for (ICategory category : categories) {
-			positions.add(category.getPosition());
+			collection.add(category.getPosition());
 		}
-		return positions.toArray(new Number[positions.size()]);
+		return collection.toArray(new Number[collection.size()]);
 	}
 	
 	@Override

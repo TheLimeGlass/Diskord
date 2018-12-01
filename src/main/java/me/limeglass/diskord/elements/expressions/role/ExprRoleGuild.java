@@ -1,8 +1,5 @@
 package me.limeglass.diskord.elements.expressions.role;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.bukkit.event.Event;
 
 import ch.njol.skript.doc.Description;
@@ -22,10 +19,9 @@ public class ExprRoleGuild extends DiskordPropertyExpression<IRole, IGuild> {
 	@Override
 	protected IGuild[] get(Event event, IRole[] roles) {
 		if (isNull(event)) return null;
-		Set<IGuild> guilds = new HashSet<IGuild>();
 		for (IRole role : roles) {
-			guilds.add(role.getGuild());
+			collection.add(role.getGuild());
 		}
-		return guilds.toArray(new IGuild[guilds.size()]);
+		return collection.toArray(new IGuild[collection.size()]);
 	}
 }

@@ -17,12 +17,15 @@ public class EffClientDeafen extends DiskordEffect {
 
 	@Override
 	protected void execute(Event event) {
-		if (expressions.get(0) == null || expressions.get(1) == null || expressions.get(2) == null) return;
+		if (areNull(event)) return;
+		Object[] inputs = expressions.get(1).getAll(event);
+		boolean state = expressions.getSingle(event, Boolean.class);
 		for (IDiscordClient client : expressions.getAll(event, IDiscordClient.class)) {
-			for (Object object : expressions.get(1).getAll(event)) {
+			for (Object object : inputs) {
 				IGuild guild = Utils.getGuild(client, object);
-				if (guild != null) continue;
-				client.deafen(guild, expressions.getSingle(event, Boolean.class));
+				if (guild == null)
+					continue;
+				client.deafen(guild, state);
 			}
 		}
 	}

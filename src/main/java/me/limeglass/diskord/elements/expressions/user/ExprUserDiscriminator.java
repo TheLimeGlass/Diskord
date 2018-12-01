@@ -1,8 +1,5 @@
 package me.limeglass.diskord.elements.expressions.user;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.bukkit.event.Event;
 
 import ch.njol.skript.doc.Description;
@@ -21,10 +18,9 @@ public class ExprUserDiscriminator extends DiskordPropertyExpression<IUser, Stri
 	@Override
 	protected String[] get(Event event, IUser[] users) {
 		if (isNull(event)) return null;
-		Set<String> discriminators = new HashSet<String>();
 		for (IUser user : users) {
-			discriminators.add(user.getDiscriminator());
+			collection.add(user.getDiscriminator());
 		}
-		return discriminators.toArray(new String[discriminators.size()]);
+		return collection.toArray(new String[collection.size()]);
 	}
 }

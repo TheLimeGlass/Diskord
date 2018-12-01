@@ -16,8 +16,9 @@ public class EffCategoryCreateChannel extends DiskordEffect {
 	@Override
 	protected void execute(Event event) {
 		if (areNull(event)) return;
+		String name = expressions.getSingle(event, String.class);
 		for (ICategory category : expressions.getAll(event, ICategory.class)) {
-			category.createChannel(expressions.getSingle(event, String.class));
+			category.createChannel(name);
 		}
 	}
 }

@@ -1,8 +1,5 @@
 package me.limeglass.diskord.elements.expressions.user;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.bukkit.event.Event;
 
 import ch.njol.skript.doc.Description;
@@ -21,10 +18,9 @@ public class ExprUserAvatar extends DiskordPropertyExpression<IUser, String> {
 	@Override
 	protected String[] get(Event event, IUser[] users) {
 		if (isNull(event)) return null;
-		Set<String> avatars = new HashSet<String>();
 		for (IUser user : users) {
-			avatars.add(user.getAvatar());
+			collection.add(user.getAvatar());
 		}
-		return avatars.toArray(new String[avatars.size()]);
+		return collection.toArray(new String[collection.size()]);
 	}
 }

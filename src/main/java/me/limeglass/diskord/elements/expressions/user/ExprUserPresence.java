@@ -1,8 +1,5 @@
 package me.limeglass.diskord.elements.expressions.user;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.bukkit.event.Event;
 
 import ch.njol.skript.doc.Description;
@@ -22,10 +19,9 @@ public class ExprUserPresence extends DiskordPropertyExpression<IUser, IPresence
 	@Override
 	protected IPresence[] get(Event event, IUser[] users) {
 		if (isNull(event)) return null;
-		Set<IPresence> presence = new HashSet<IPresence>();
 		for (IUser user : users) {
-			presence.add(user.getPresence());
+			collection.add(user.getPresence());
 		}
-		return presence.toArray(new IPresence[presence.size()]);
+		return collection.toArray(new IPresence[collection.size()]);
 	}
 }

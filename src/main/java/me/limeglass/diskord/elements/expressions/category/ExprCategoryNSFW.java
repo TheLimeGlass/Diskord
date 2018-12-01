@@ -1,8 +1,5 @@
 package me.limeglass.diskord.elements.expressions.category;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.bukkit.event.Event;
 
 import ch.njol.skript.classes.Changer.ChangeMode;
@@ -24,11 +21,10 @@ public class ExprCategoryNSFW extends DiskordPropertyExpression<ICategory, Boole
 	@Override
 	protected Boolean[] get(Event event, ICategory[] categories) {
 		if (isNull(event)) return null;
-		Set<Boolean> states = new HashSet<Boolean>();
 		for (ICategory category : categories) {
-			states.add(category.isNSFW());
+			collection.add(category.isNSFW());
 		}
-		return states.toArray(new Boolean[states.size()]);
+		return collection.toArray(new Boolean[collection.size()]);
 	}
 	
 	@Override

@@ -17,8 +17,9 @@ public class EffUserVoiceChannelMove extends DiskordEffect {
 	@Override
 	protected void execute(Event event) {
 		if (areNull(event)) return;
+		IVoiceChannel channel = expressions.getSingle(event, IVoiceChannel.class);
 		for (IUser user : expressions.getAll(event, IUser.class)) {
-			user.moveToVoiceChannel(expressions.getSingle(event, IVoiceChannel.class));
+			user.moveToVoiceChannel(channel);
 		}
 	}
 }

@@ -1,8 +1,5 @@
 package me.limeglass.diskord.elements.expressions.category;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.bukkit.event.Event;
 
 import ch.njol.skript.doc.Description;
@@ -22,10 +19,9 @@ public class ExprCategoryGuild extends DiskordPropertyExpression<ICategory, IGui
 	@Override
 	protected IGuild[] get(Event event, ICategory[] categories) {
 		if (isNull(event)) return null;
-		Set<IGuild> guilds = new HashSet<IGuild>();
 		for (ICategory category : categories) {
-			guilds.add(category.getGuild());
+			collection.add(category.getGuild());
 		}
-		return guilds.toArray(new IGuild[guilds.size()]);
+		return collection.toArray(new IGuild[collection.size()]);
 	}
 }

@@ -1,8 +1,5 @@
 package me.limeglass.diskord.elements.expressions.role;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.bukkit.event.Event;
 
 import ch.njol.skript.classes.Changer.ChangeMode;
@@ -24,11 +21,10 @@ public class ExprRoleMentionable extends DiskordPropertyExpression<IRole, Boolea
 	@Override
 	protected Boolean[] get(Event event, IRole[] roles) {
 		if (isNull(event)) return null;
-		Set<Boolean> mentionable = new HashSet<Boolean>();
 		for (IRole role : roles) {
-			mentionable.add(role.isHoisted());
+			collection.add(role.isHoisted());
 		}
-		return mentionable.toArray(new Boolean[mentionable.size()]);
+		return collection.toArray(new Boolean[collection.size()]);
 	}
 	
 	@Override

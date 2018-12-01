@@ -1,8 +1,5 @@
 package me.limeglass.diskord.elements.expressions.client;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.bukkit.event.Event;
 
 import ch.njol.skript.doc.Description;
@@ -21,19 +18,18 @@ public class ExprClientGuildFromID extends DiskordExpression<IGuild> {
 	
 	@Override
 	protected IGuild[] get(Event event) {
-		if (expressions.get(0) == null || expressions.get(1) == null) return null;
-		Set<IGuild> guilds = new HashSet<IGuild>();
+		if (areNull(event)) return null;
 		for (IDiscordClient client : expressions.getAll(event, IDiscordClient.class)) {
 			for (Object id : expressions.get(1).getAll(event)) {
 				if (id instanceof String) {
 					Long number = Long.parseLong((String)id);
-					guilds.add(client.getGuildByID(number));
+					collection.add(client.getGuildByID(number));
 				} else if (id instanceof Number) {
 					Long number = ((Number)id).longValue();
-					guilds.add(client.getGuildByID(number));
+					collection.add(client.getGuildByID(number));
 				}
 			}
 		}
-		return guilds.toArray(new IGuild[guilds.size()]);
+		return collection.toArray(new IGuild[collection.size()]);
 	}
 }

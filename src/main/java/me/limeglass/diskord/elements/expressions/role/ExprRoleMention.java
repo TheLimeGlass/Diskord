@@ -1,8 +1,5 @@
 package me.limeglass.diskord.elements.expressions.role;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.bukkit.event.Event;
 
 import ch.njol.skript.doc.Description;
@@ -21,10 +18,9 @@ public class ExprRoleMention extends DiskordPropertyExpression<IRole, String> {
 	@Override
 	protected String[] get(Event event, IRole[] roles) {
 		if (isNull(event)) return null;
-		Set<String> mentions = new HashSet<String>();
 		for (IRole role : roles) {
-			mentions.add(role.mention());
+			collection.add(role.mention());
 		}
-		return mentions.toArray(new String[mentions.size()]);
+		return collection.toArray(new String[collection.size()]);
 	}
 }

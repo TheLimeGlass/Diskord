@@ -1,8 +1,5 @@
 package me.limeglass.diskord.elements.expressions.role;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.bukkit.event.Event;
 
 import ch.njol.skript.doc.Description;
@@ -21,10 +18,9 @@ public class ExprRolePosition extends DiskordPropertyExpression<IRole, Number> {
 	@Override
 	protected Number[] get(Event event, IRole[] roles) {
 		if (isNull(event)) return null;
-		Set<Number> positions = new HashSet<Number>();
 		for (IRole role : roles) {
-			positions.add(role.getPosition());
+			collection.add(role.getPosition());
 		}
-		return positions.toArray(new Number[positions.size()]);
+		return collection.toArray(new Number[collection.size()]);
 	}
 }

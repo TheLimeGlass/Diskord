@@ -1,8 +1,5 @@
 package me.limeglass.diskord.elements.expressions.user;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.bukkit.event.Event;
 
 import ch.njol.skript.doc.Description;
@@ -22,12 +19,12 @@ public class ExprUserNickname extends DiskordExpression<String> {
 	@Override
 	protected String[] get(Event event) {
 		if (areNull(event)) return null;
-		Set<String> nicknames = new HashSet<String>();
+		IGuild[] guilds = expressions.getAll(event, IGuild.class);
 		for (IUser user : expressions.getAll(event, IUser.class)) {
-			for (IGuild guild : expressions.getAll(event, IGuild.class)) {
-				nicknames.add(user.getNicknameForGuild(guild));
+			for (IGuild guild : guilds) {
+				collection.add(user.getNicknameForGuild(guild));
 			}
 		}
-		return nicknames.toArray(new String[nicknames.size()]);
+		return collection.toArray(new String[collection.size()]);
 	}
 }

@@ -21,8 +21,8 @@ import me.limeglass.diskord.utils.annotations.Disabled;
 
 public class Syntax {
 
-	private static HashMap<String, String[]> modified = new HashMap<String, String[]>();
-	private static HashMap<String, String[]> completeSyntax = new HashMap<String, String[]>();
+	private static HashMap<String, String[]> completeSyntax = new HashMap<>();
+	private static HashMap<String, String[]> modified = new HashMap<>();
 
 	public static String[] register(Class<?> syntaxClass, String... syntax) {
 		if (syntaxClass.isAnnotationPresent(Disabled.class)) return null;
@@ -71,7 +71,7 @@ public class Syntax {
 		return add(syntaxClass.getSimpleName(), new String[]{Diskord.getSyntaxData().getString(node + "syntax")});
 	}
 	
-	public static Boolean isModified(@SuppressWarnings("rawtypes") Class syntaxClass) {
+	public static Boolean isModified(Class<?> syntaxClass) {
 		return modified.containsKey(syntaxClass.getSimpleName());
 	}
 	
@@ -93,4 +93,5 @@ public class Syntax {
 			e.printStackTrace();
 		}
 	}
+
 }

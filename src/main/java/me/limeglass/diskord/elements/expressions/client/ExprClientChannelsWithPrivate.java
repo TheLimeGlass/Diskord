@@ -1,8 +1,5 @@
 package me.limeglass.diskord.elements.expressions.client;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.bukkit.event.Event;
 
 import ch.njol.skript.doc.Description;
@@ -22,10 +19,9 @@ public class ExprClientChannelsWithPrivate extends DiskordPropertyExpression<IDi
 	@Override
 	protected IChannel[] get(Event event, IDiscordClient[] clients) {
 		if (isNull(event)) return null;
-		Set<IChannel> channels = new HashSet<IChannel>();
 		for (IDiscordClient client : clients) {
-			channels.addAll(client.getChannels(true));
+			collection.addAll(client.getChannels(true));
 		}
-		return channels.toArray(new IChannel[channels.size()]);
+		return collection.toArray(new IChannel[collection.size()]);
 	}
 }

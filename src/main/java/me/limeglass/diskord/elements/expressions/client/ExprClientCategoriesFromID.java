@@ -1,8 +1,5 @@
 package me.limeglass.diskord.elements.expressions.client;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.bukkit.event.Event;
 
 import ch.njol.skript.doc.Description;
@@ -21,19 +18,19 @@ public class ExprClientCategoriesFromID extends DiskordExpression<ICategory> {
 	
 	@Override
 	protected ICategory[] get(Event event) {
-		if (expressions.get(0) == null || expressions.get(1) == null) return null;
-		Set<ICategory> categories = new HashSet<ICategory>();
+		if (areNull(event)) return null;
+		Object[] ids = expressions.get(1).getAll(event);
 		for (IDiscordClient client : expressions.getAll(event, IDiscordClient.class)) {
-			for (Object id : expressions.get(1).getAll(event)) {
+			for (Object id : ids) {
 				if (id instanceof String) {
 					Long number = Long.parseLong((String)id);
-					categories.add(client.getCategoryByID(number));
+					collection.add(client.getCategoryByID(number));
 				} else if (id instanceof Number) {
 					Long number = ((Number)id).longValue();
-					categories.add(client.getCategoryByID(number));
+					collection.add(client.getCategoryByID(number));
 				}
 			}
 		}
-		return categories.toArray(new ICategory[categories.size()]);
+		return collection.toArray(new ICategory[collection.size()]);
 	}
 }
